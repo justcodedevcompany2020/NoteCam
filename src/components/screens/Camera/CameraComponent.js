@@ -38,25 +38,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RNFetchBlob from 'rn-fetch-blob';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-
-// import Share from 'react-native-share';
-// import ImagePicker from 'react-native-image-picker';
-
-// import * as IntentLauncher from 'expo-intent-launcher';
-// import IntentLauncher, { IntentConstant } from 'react-native-intent-launcher'
-// import DeviceInfo from 'react-native-device-info';
-
-// import * as FileSystem from 'expo-file-system';
-// import * as MediaLibrary from 'expo-media-library';
-// import GetLocation from 'react-native-get-location';
-
 import Geolocation from 'react-native-geolocation-service';
 import moment from "moment";
 import ImageMarker, {ImageFormat} from "react-native-image-marker"
-
-// import CameraRoll from '@react-native-community/cameraroll';
-// import ImgToBase64 from 'react-native-image-base64';
-
 import CameraSvgComponent from "../../../assets/CameraSvg";
 import CloseSvg from "../../../assets/CloseSvg";
 import Marker from "react-native-image-marker";
