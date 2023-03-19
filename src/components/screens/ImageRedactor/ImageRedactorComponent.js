@@ -121,17 +121,6 @@ export default class MarkerTest extends React.Component {
 
 
     selectArrow = async (markerSrcUri) =>{
-
-        // if (!this.state.arrow_selected)
-        // {
-        //     return false;
-        // }
-        // // this.handlePress(evt)
-        // console.log(`x coord = ${parseInt(evt.nativeEvent.locationX)}`);
-        // console.log(`y coord = ${parseInt(evt.nativeEvent.locationY)}`);
-        // // console.log(evt);
-        //
-
         let locationX = 200;
         let locationY = 200;
 
@@ -139,10 +128,6 @@ export default class MarkerTest extends React.Component {
             locationX: locationX,
             locationY: locationY
         })
-        //
-        // console.log(this.state.markImage, 'this.state.markImage')
-        // console.log(this.state.image, 'this.state.image')
-        // console.log(evt, 'tevt')
 
         Marker.markImage({
             src: this.state.image,
