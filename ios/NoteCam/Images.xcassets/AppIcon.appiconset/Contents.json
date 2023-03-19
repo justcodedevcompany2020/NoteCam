@@ -26,11 +26,13 @@
       "size" : "40x40"
     },
     {
+      "filename" : "cropped 1.jpg",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
+      "filename" : "cropped.jpg",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
@@ -41,6 +43,7 @@
       "size" : "60x60"
     },
     {
+      "filename" : "Park-lawn-trees_1280x1024 (1).jpeg",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

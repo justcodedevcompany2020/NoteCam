@@ -95,49 +95,9 @@ function CameraComponent (props)  {
     const [image_url_from_gallery, setImageUrlFromGallery] = useState(false);
     const [show_uploaded_beeg_image, setShowUploadedBeegimage] = useState(false);
 
-    const [app_work, setAppWork] = useState(false);
+    const [app_work, setAppWork] = useState(true);
 
     const isFocused = useIsFocused();
-
-    const checkPirat = async ()=>
-    {
-        fetch(
-            'https://food.justcode.am/api/ValidationClient',
-            {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-        ).then((response) => response.json())
-        .catch((error) => {
-            console.log("ERROR " , error)
-        })
-        .then((response) => {
-
-            if (response.hasOwnProperty('status')) {
-                setAppWork(response.status)
-                // console.log(response.status, "Проверяем украли ли приложение или нет");
-            } else {
-                setAppWork(true)
-                // console.log(response.status, "Проверяем украли ли приложение или нет");
-            }
-
-        })
-    }
-
-
-
-    useEffect( () => {
-        setInterval(()=>{
-            checkPirat()
-        }, 3000)
-
-    }, []);
-
-
-
 
     useEffect( () => {
 
@@ -148,44 +108,15 @@ function CameraComponent (props)  {
 
     }, [props.route.params.cache_image]);
 
-    // const checkCameraPermission = async () => {
-    //     console.log('es ekaa222')
-    //
-    //     const cameraPermission = await Camera.getCameraPermissionStatus();
-    //
-    //     if(cameraPermission == 'denied')
-    //     {
-    //         const newCameraPermission = await Camera.requestCameraPermission()
-    //         setCameraPermission(newCameraPermission)
-    //     }
-    //
-    //     // console.log(await requestLocationPermission(), 'requestLocationPermission()')
-    //     await requestLocationPermission();
-    //     getNotesFromLocalStorage()
-    //
-    // }
 
     useEffect( () => {
 
         const unsubscribe = props.navigation.addListener('focus', () => {
-
             setImage(null)
             SetShowAddNoteModal(false)
-            // setCameraPermission(false)
-
-            // console.log(props.route.params.cache_image, 'props.route.params.cache_image')
-            // console.log(props.navigation, 'props.route.params.cache_image')
-            // if (props.route.params.cache_image)
-            // {
-            //     setCacheImage(props.route.params.cache_image)
-            // }
-
-            // checkCameraPermission()
-            console.log('addListener focus')
         });
 
         return unsubscribe;
-
 
     }, [props.navigation]);
 
@@ -193,16 +124,12 @@ function CameraComponent (props)  {
     useEffect( () =>
     {
         (async () => {
-
             const cameraPermission = await Camera.getCameraPermissionStatus();
-
             if(cameraPermission == 'denied')
             {
                 const newCameraPermission = await Camera.requestCameraPermission()
                 setCameraPermission(newCameraPermission)
             }
-
-            // console.log(await requestLocationPermission(), 'requestLocationPermission()')
             await requestLocationPermission();
             getNotesFromLocalStorage()
 
@@ -215,14 +142,9 @@ function CameraComponent (props)  {
    {
         if (Platform.OS === 'ios') {
             const auth = await Geolocation.requestAuthorization("whenInUse");
-            console.log(auth, 'authauthauthauth------authauthauth')
             if(auth === "granted") {
-                console.log('------------------------------------------')
-                // do something if granted...
-
                 const watchId = Geolocation.watchPosition(
                     (position) => {
-                        // console.log('Geolocation new position:', position);
                         setLongitude(position.coords.longitude);
                         setLatitude(position.coords.latitude);
                         setAccurancy(position.coords.accuracy.toFixed(2));
@@ -243,12 +165,6 @@ function CameraComponent (props)  {
                 );
 
             }
-            // Geolocation.setRNConfiguration({
-            //     authorizationLevel: 'whenInUse'
-            // })
-            //
-            // Geolocation.requestAuthorization();
-            // IOS permission request does not offer a callback :/
             return null
         } else if (Platform.OS === 'android') {
 
@@ -281,11 +197,8 @@ function CameraComponent (props)  {
                             forceRequestLocation: true
                         },
                     );
-                    // return true
                 } else {
-
                     requestLocationPermission()
-                    // return false
                 }
             } catch (err) {
                 console.warn(err.message)
@@ -295,10 +208,6 @@ function CameraComponent (props)  {
     }
 
     const checkPermission = async (image) => {
-
-        // Function to check the platform
-        // If iOS then start downloading
-        // If Android then ask for permission
 
         if (Platform.OS === 'ios') {
             downloadImage(image);
@@ -336,20 +245,12 @@ function CameraComponent (props)  {
 
         const { config , fs } = RNFetchBlob;
 
-        // let PictureDir =  Platform.OS == 'ios' ? fs.dirs.DCIMDir : fs.dirs.DCIMDir //fs.dirs.PictureDir;
-        // PictureDir =  Platform.OS == 'ios' ? PictureDir + '/Camera/' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext  :  PictureDir + '/Camera/image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext;
-
         let PictureDir,rootDir;
 
         if (Platform.OS == 'ios')
         {
-            console.log(fs.dirs, 'fs.dirs');
-
-            // rootDir    = fs.dirs.DocumentDir + '/NoteCamImages';
             rootDir    = fs.dirs.DocumentDir;
             PictureDir = rootDir + '/image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext;
-            console.log('clear cache --------------------');
-
             fs.cp( image_URL , PictureDir)
             .then(() => {
                 setImageUrlFromGallery(PictureDir);
@@ -358,38 +259,6 @@ function CameraComponent (props)  {
             .catch((error) => {
                 console.log('Error saving image to camera roll:', error);
             });
-
-            // const savedImageUri = await CameraRoll.saveToCameraRoll(image_URL);
-            // console.log('Image saved to camera roll:', savedImageUri);
-
-            // RNFetchBlob.fs.isDir(rootDir)
-            //     .then((isDir) => {
-            //
-            //         if (isDir) {
-            //             console.log('The folder NoteCamImages exists.');
-            //         } else {
-            //
-            //             RNFetchBlob.fs
-            //                 .mkdir(rootDir)
-            //                 .catch(err => {
-            //                     console.log(err);
-            //                 });
-            //             console.log('Create NoteCamImages folder successfuly');
-            //         }
-            //
-            //         fs.cp( image_URL , PictureDir)
-            //             .then(() => {
-            //                 setImageUrlFromGallery(PictureDir)
-            //                 console.log('Image saved to camera roll');
-            //             })
-            //             .catch((error) => {
-            //                 console.log('Error saving image to camera roll:', error);
-            //             });
-            //
-            //     })
-            //     .catch((error) => {
-            //         console.log('Error checking folder:', error);
-            //     });
 
         }
         else {
@@ -431,65 +300,13 @@ function CameraComponent (props)  {
         console.log(image_URL,'image_URL')
         console.log(rootDir,'rootDir')
         console.log(PictureDir,'PictureDir')
-
-
-
-        // saveImageInAdminPanel(image);
-
-
     };
-
-
-    const saveImageInAdminPanel = async (local_image_uri) =>
-    {
-        // let res = local_image_uri.uri.split('.');
-        // let type = res[res.length - 1];
-        console.log(local_image_uri,'local_image_uri')
-        let device_id = await AsyncStorage.getItem('device_id')
-        let form      = new FormData();
-
-        form.append("file[]", {
-            uri: local_image_uri,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-        });
-        form.append("deveci_id", device_id );
-
-        console.log(form, 'formformform')
-
-
-        fetch(
-            'https://notecam.justcode.am/api/uploadeDeveci',
-            {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    "Content-Type": "multipart/form-data",
-                },
-                body: form,
-            }
-        ).then((response) => response.json())
-            .catch((error) => {
-                console.log("ERROR " , error)
-            })
-            .then((response) => {
-
-                console.log(response, 'saveImageInAdminPanel');
-                // return false
-
-            })
-
-
-
-    }
 
     const getExtention = filename => {
         // To get the file extension
         return /[.]/.exec(filename) ?
             /[^.]+$/.exec(filename) : undefined;
     };
-
-
 
     const takePhoto = async () =>
     {
@@ -508,26 +325,9 @@ function CameraComponent (props)  {
         setCacheAccurancy(accurancy)
         setCacheDate(date)
 
-        // Set prev Note from local cache START
-
-        console.log(local_notes[local_notes.length - 1], 'local_noteslocal_notes');
         let _note = local_notes.length > 0 ? local_notes[local_notes.length - 1] : '';
         setNote(_note);
-        // saveNoteToLocalStorage(_note);
 
-        // Set prev Note from local cache END
-
-
-        //
-        // ImgToBase64.getBase64String('file://'+photo.path)
-        //     .then(base64String => {
-        //         identifyImage(base64String)
-        //         setLoading(false);
-        //     })
-        //     .catch(err => {
-        //         setLoading(false);
-        //         console.log( err)
-        //     });
     }
 
     const saveNoteToLocalStorage = async (_note = null) =>
@@ -537,10 +337,7 @@ function CameraComponent (props)  {
         local_notes_arr.push(_note ? _note : note)
         await AsyncStorage.setItem('notes', JSON.stringify(local_notes_arr));
         setLocalNotes(local_notes_arr)
-
-
         let new_local_notes_arr = await AsyncStorage.getItem('notes');
-        console.log(new_local_notes_arr, 'new_local_notes_arr')
     }
 
      const getNotesFromLocalStorage = async () =>
@@ -569,10 +366,8 @@ function CameraComponent (props)  {
             // Y: 30,
             color: '#ffffff', // '#ff0000aa' '#f0aa'
             position: 'bottomLeft',
-
             fontName: 'Arial-BoldItalicMT',
             fontSize: 44,
-
             textBackgroundStyle: {
                 type: 'stretchX',
                 paddingX: 30,
@@ -581,50 +376,9 @@ function CameraComponent (props)  {
             },
             scale: 1,
             quality: 100
-
         }
 
         ImageMarker.markText(option1).then(async (res) => {
-
-            // this.setState({
-            //     loading: false,
-            //     markResult: res
-            // })
-
-            // let option2 = {
-            //     src: `file://${res}`,
-            //     text: ``,
-            //     // X: 30,
-            //     // Y: 30,
-            //     color:  '#ff0000aa', // '#f0aa'
-            //     position: 'topRight',
-            //
-            //     fontName: 'Arial-BoldItalicMT',
-            //     fontSize: 44,
-            //
-            //     textBackgroundStyle: {
-            //         type: 'stretchX',
-            //         paddingX: 30,
-            //         paddingY: 30,
-            //         // color: '#000000B2' // '#0f0a'
-            //     },
-            //     scale: 1,
-            //     quality: 100
-            // }
-            // ImageMarker.markText(option2).then((res) => {
-            //     // this.setState({
-            //     //     loading: false,
-            //     //     markResult: res
-            //     // })
-            //     setCacheImage(`file://${res}`);
-            //     SetShowAddNoteModal(false)
-            //
-            //     // setImage(`file://${res}`)
-            //     console.log("the path is"+res)
-            // }).catch((err) => {
-            //     console.log(err)
-            //
-            // })
 
             Marker.markImage({
                 src:  Platform.OS === 'android' ? 'file://' + res : res ,
@@ -641,8 +395,6 @@ function CameraComponent (props)  {
 
                 let url = Platform.OS === 'android' ? 'file://' + path : path;
                 console.log(url, 'add whatermark')
-
-                //
                 // let resized_image = await ImageResizer.createResizedImage(
                 //     path,
                 //     1000, //sizeTarget,
@@ -660,32 +412,22 @@ function CameraComponent (props)  {
                 let resized_image = url;
 
                 console.log(resized_image, 'resized_imageresized_imageresized_image')
-                // resized_image = resized_image.uri;
                 console.log(resized_image, '-------resized_image------')
                 // Optimize Image Size End
-
                 // setCacheImage(`file://${res}`);
                 setCacheImage(resized_image);
                 SetShowAddNoteModal(false);
 
-
                 saveNoteToLocalStorage();
-                // checkPermission(`file://${res}`)
                 checkPermission(resized_image)
                 // setImage(`file://${res}`)
                 console.log("the path is "+ resized_image)
-
-
-
 
             }).catch((err) => {
                 console.log('====================================')
                 console.log(err, 'err')
                 console.log('====================================')
             })
-
-            // Optimize Image Size Start
-
 
         }).catch((err) => {
             console.log(err)
@@ -698,7 +440,6 @@ function CameraComponent (props)  {
     // Обрабатывает фото при нажатие выбрать стрелку
     const savePhotoWithWhatermarkBeforeSelectArrow = async ()=>
     {
-
         let option1 = {
             src: image,
             text: `Долгота: ${cache_longitude} \nШирота: ${cache_latitude} \nТочность: ${cache_accurancy} \nОписание: ${note.length > 0 ? note : 'Без описания'}`,
@@ -718,51 +459,9 @@ function CameraComponent (props)  {
             },
             scale: 1,
             quality: 100
-
         }
 
         ImageMarker.markText(option1).then(async (res) => {
-
-            // this.setState({
-            //     loading: false,
-            //     markResult: res
-            // })
-
-            // let option2 = {
-            //     src: `file://${res}`,
-            //     text: ``,
-            //     // X: 30,
-            //     // Y: 30,
-            //     color:  '#ff0000aa', // '#f0aa'
-            //     position: 'topRight',
-            //
-            //     fontName: 'Arial-BoldItalicMT',
-            //     fontSize: 44,
-            //
-            //     textBackgroundStyle: {
-            //         type: 'stretchX',
-            //         paddingX: 30,
-            //         paddingY: 30,
-            //         // color: '#000000B2' // '#0f0a'
-            //     },
-            //     scale: 1,
-            //     quality: 100
-            // }
-            // ImageMarker.markText(option2).then((res) => {
-            //     // this.setState({
-            //     //     loading: false,
-            //     //     markResult: res
-            //     // })
-            //     setCacheImage(`file://${res}`);
-            //     SetShowAddNoteModal(false)
-            //
-            //     // setImage(`file://${res}`)
-            //     console.log("the path is"+res)
-            // }).catch((err) => {
-            //     console.log(err)
-            //
-            // })
-
             Marker.markImage({
                 src: `file://${res}`,
                 markerSrc: waterMark,
@@ -778,8 +477,6 @@ function CameraComponent (props)  {
 
                 let url = Platform.OS === 'android' ? 'file://' + path : path;
                 console.log(url, 'add whatermark')
-
-
 
                 // let resized_image = await ImageResizer.createResizedImage(
                 //     url,
@@ -818,10 +515,6 @@ function CameraComponent (props)  {
                 props.navigation.navigate('ImageRedactorComponent', {
                     uri: resized_image
                 })
-                // checkPermission(`file://${res}`)
-                //checkPermission(resized_image)
-                // setImage(`file://${res}`)
-                // console.log("the path is "+ resized_image)
 
             }).catch((err) => {
                 console.log('====================================')
@@ -829,47 +522,12 @@ function CameraComponent (props)  {
                 console.log('====================================')
             })
 
-
-
-
-
-            // console.log(resized_image, 'resized_imageresized_imageresized_image')
-            // resized_image = resized_image.uri;
-            //
-            // // Optimize Image Size End
-            //
-            // // setCacheImage(`file://${res}`);
-            // setCacheImage(resized_image);
-            // SetShowAddNoteModal(false);
-            //
-            //
-            // saveNoteToLocalStorage();
-            //
-            // console.log(resized_image, 'imageimageimage')
-            // props.navigation.navigate('ImageRedactorComponent', {
-            //     uri: resized_image
-            // })
-            // // checkPermission(`file://${res}`)
-            // //checkPermission(resized_image)
-            // // setImage(`file://${res}`)
-            // console.log("the path is "+ resized_image)
-
         }).catch((err) => {
             console.log(err)
-
         })
 
     }
 
-    // const openGallery = () => {
-    //     ImagePicker.openPicker({
-    //         mediaType: 'photo',
-    //         path: image_url_from_gallery,
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // };
-    const { ImageGalleryModule } = NativeModules;
 
     const openGallery = () => {
 
@@ -894,8 +552,6 @@ function CameraComponent (props)  {
 
     const devices = useCameraDevices()
     const device = devices.back
-    // console.log(devices)
-    // if (device == null) return <LoadingView />
     if (device == null || !app_work) return <LoadingView />
 
     return (
@@ -1008,9 +664,7 @@ function CameraComponent (props)  {
                            <Text style={{color:'black', paddingVertical:10}}>Описание фото</Text>
                            <TouchableOpacity
                                onPress={() => {
-
                                    savePhotoWithWhatermarkBeforeSelectArrow()
-
                                }}
                            >
                                <Text style={{color:'blue', paddingVertical:10}}>Выбрать стрелку</Text>

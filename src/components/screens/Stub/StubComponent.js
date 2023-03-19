@@ -26,6 +26,13 @@ export default class App extends Component {
         }
     };
 
+
+
+
+
+
+
+
     setDeviceId = async ()=>
     {
         // AsyncStorage.clear()

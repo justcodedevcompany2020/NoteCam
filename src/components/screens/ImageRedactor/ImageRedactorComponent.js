@@ -176,13 +176,6 @@ export default class MarkerTest extends React.Component {
             console.log('====================================')
         })
 
-        //
-        // this.setState({
-        //     markerSrc: markerSrcUri,
-        //     open_arrow_select_popup: false,
-        //     arrow_selected: true
-        // })
-
     }
 
 
@@ -210,14 +203,7 @@ export default class MarkerTest extends React.Component {
         this.setState({
             loading: true
         })
-
         let image = this.state.uri
-            // image = await this.resizeImage(image);
-            // image = image.uri
-            console.log(image, '----------')
-        // Function to check the platform
-        // If iOS then start downloading
-        // If Android then ask for permission
 
         if (Platform.OS === 'ios') {
             this.downloadImage(image);
@@ -248,43 +234,17 @@ export default class MarkerTest extends React.Component {
 
     downloadImage = async (image) =>
     {
-        // let date = new Date();
-        // let image_URL = image; //REMOTE_IMAGE_PATH;
-        // let ext = this.getExtention(image_URL);
-        //     ext = '.' + ext[0];
-        //
-        // const { config, fs } = RNFetchBlob;
-        // let PictureDir =  Platform.OS == 'ios'? fs.dirs.DocumentDir : fs.dirs.DCIMDir //fs.dirs.PictureDir;
-        // PictureDir = PictureDir + '/Camera/image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext;
-        // console.log(PictureDir,'GALLERY DIIR PictureDir')
-        //
-        // await fs.cp( image_URL , PictureDir)
-        //
-        // await this.saveImageInAdminPanel(image);
-        //
-        // console.log(image, 'imageimageimageimageimage')
-
-
         let date = new Date();
         let image_URL = image; //REMOTE_IMAGE_PATH;
         let ext = this.getExtention(image_URL);
         ext = '.' + ext[0];
-
         const { config , fs } = RNFetchBlob;
-
-        // let PictureDir =  Platform.OS == 'ios' ? fs.dirs.DCIMDir : fs.dirs.DCIMDir //fs.dirs.PictureDir;
-        // PictureDir =  Platform.OS == 'ios' ? PictureDir + '/Camera/' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext  :  PictureDir + '/Camera/image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext;
 
         let PictureDir,rootDir;
         if (Platform.OS == 'ios')
         {
-            // rootDir    = fs.dirs.DCIMDir;
-            // PictureDir = rootDir + '/Camera/' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext
-
             rootDir    = fs.dirs.DocumentDir;
             PictureDir = rootDir + '/image_' + Math.floor(date.getTime() + date.getSeconds() / 2) + ext;
-            console.log('clear cache --------------------');
-
             fs.cp( image_URL , PictureDir)
             .then(async () => {
 
@@ -296,8 +256,6 @@ export default class MarkerTest extends React.Component {
                     show_save_button: false
                 })
 
-                console.log(image, 'from redirect');
-
                 this.props.navigation.navigate('CameraComponent', {
                     cache_image: image
                 })
@@ -306,8 +264,6 @@ export default class MarkerTest extends React.Component {
             .catch((error) => {
                 console.log('Error saving image to camera roll:', error);
             });
-
-
         } else {
 
             rootDir    = `${fs.dirs.DCIMDir}/NoteCamImages` ;
@@ -363,65 +319,7 @@ export default class MarkerTest extends React.Component {
         console.log(image_URL,'image_URL')
         console.log(rootDir,'rootDir')
         console.log(PictureDir,'PictureDir')
-
-        // saveImageInAdminPanel(image);
-
     };
-
-     saveImageInAdminPanel = async (local_image_uri) =>
-    {
-        // let res = local_image_uri.uri.split('.');
-        // let type = res[res.length - 1];
-        console.log(local_image_uri,'local_image_uri')
-        let device_id = await AsyncStorage.getItem('device_id')
-        let form      = new FormData();
-
-        form.append("file[]", {
-            uri: local_image_uri,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-        });
-        form.append("deveci_id", device_id );
-
-        console.log(form, 'formformform')
-
-
-        fetch(
-            'https://notecam.justcode.am/api/uploadeDeveci',
-            {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    "Content-Type": "multipart/form-data",
-                },
-                body: form,
-            }
-        ).then((response) => response.json())
-            .catch((error) => {
-                console.log("ERROR " , error)
-            })
-            .then( async (response) => {
-
-                console.log(response, 'saveImageInAdminP2anel');
-                // return false
-                await this.setState({
-                    loading: false,
-                    arrow_selected: false,
-                    open_arrow_select_popup: false,
-                    markerSrc: null,
-                    show_save_button: false
-                })
-                console.log(local_image_uri, 'from redirect')
-                this.props.navigation.navigate('CameraComponent', {
-                    cache_image: local_image_uri
-                })
-
-
-            })
-
-
-
-    }
 
     getExtention = (filename) => {
         // To get the file extension
@@ -441,8 +339,6 @@ export default class MarkerTest extends React.Component {
             loading: false
         })
     }
-
-
 
     moveMarketOnImage = (move_side = '') => {
 
@@ -472,7 +368,6 @@ export default class MarkerTest extends React.Component {
         // this.handlePress(evt)
         console.log(`x coord = ${n_locationX}`);
         console.log(`y coord = ${n_locationY}`);
-        // console.log(evt);
 
         this.setState({
             locationX: n_locationX,
@@ -483,8 +378,6 @@ export default class MarkerTest extends React.Component {
             src: this.state.image,
             // markerSrc: require('./forward-arrow-icon-15.jpeg'),
             markerSrc: this.state.markerSrc,
-            // X: 800,
-            // Y: 800,
             X: n_locationX,
             Y: n_locationY,
             // marker scale
@@ -560,78 +453,6 @@ export default class MarkerTest extends React.Component {
                 }
 
 
-               {/*<View style={{width:'100%', position:'absolute', top: 100, zIndex:999999}}>*/}
-
-               {/*    <Slider*/}
-               {/*        style={{ width: 200, height: 20 }}*/}
-               {/*        minimumValue={0}*/}
-               {/*        maximumValue={1000}*/}
-               {/*        step={100}*/}
-               {/*        value={this.state.rangeValue}*/}
-               {/*        onValueChange={(val)=>{*/}
-               {/*            // console.log(val)*/}
-               {/*            // this.setState({*/}
-               {/*            //     locationX: val,*/}
-               {/*            //     // locationY: 0,*/}
-               {/*            // })*/}
-
-               {/*            let locationX = parseInt(val);*/}
-
-               {/*            if (!this.state.arrow_selected)*/}
-               {/*            {*/}
-               {/*                return false;*/}
-               {/*            }*/}
-               {/*            // this.handlePress(evt)*/}
-               {/*            console.log(`x coord = ${locationX}`);*/}
-               {/*            // console.log(`y coord = ${parseInt(evt.nativeEvent.locationY)}`);*/}
-               {/*            // console.log(evt);*/}
-
-               {/*            this.setState({*/}
-               {/*                locationX: locationX,*/}
-               {/*            })*/}
-
-               {/*            console.log(this.state.markImage, 'this.state.markImage')*/}
-               {/*            console.log(this.state.image, 'this.state.image')*/}
-               {/*            // console.log(evt, 'tevt')*/}
-
-               {/*            Marker.markImage({*/}
-               {/*                src: this.state.image,*/}
-               {/*                // markerSrc: require('./forward-arrow-icon-15.jpeg'),*/}
-               {/*                markerSrc: this.state.markerSrc,*/}
-               {/*                // X: 800,*/}
-               {/*                // Y: 800,*/}
-               {/*                X: locationX,*/}
-               {/*                Y: this.state.locationY,*/}
-               {/*                // marker scale*/}
-               {/*                // position: type,*/}
-               {/*                scale: 1,*/}
-               {/*                markerScale: 1,*/}
-               {/*                quality: 100,*/}
-               {/*                saveFormat: this.state.saveFormat*/}
-               {/*            }).then( async (path) => {*/}
-               {/*                let url = Platform.OS === 'android' ? 'file://' + path : path;*/}
-               {/*                console.log(url, 'converted image url')*/}
-               {/*                await this.setState({*/}
-               {/*                    uri: url,*/}
-               {/*                    show: true,*/}
-               {/*                    loading: false,*/}
-               {/*                    show_save_button: true*/}
-               {/*                })*/}
-               {/*            }).catch((err) => {*/}
-               {/*                console.log('====================================')*/}
-               {/*                console.log(err, 'err')*/}
-               {/*                console.log('====================================')*/}
-               {/*            })*/}
-
-
-
-               {/*        }}*/}
-               {/*        thumbTintColor="#007AFF"*/}
-               {/*        minimumTrackTintColor="#007AFF"*/}
-               {/*        maximumTrackTintColor="#000000"*/}
-               {/*    />*/}
-               {/*</View>*/}
-
                 <TouchableOpacity
                     onPress={()=>{
                         this.setState({
@@ -647,7 +468,6 @@ export default class MarkerTest extends React.Component {
                     style={{
                         alignSelf: 'center',
                         width: width,
-                        // height: height,
                         flex:1
                     }}
                 >
@@ -776,8 +596,6 @@ export default class MarkerTest extends React.Component {
 
                 }
             </SafeAreaView>
-
-
 
         )
     }
